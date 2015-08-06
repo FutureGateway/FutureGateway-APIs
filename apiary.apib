@@ -1,0 +1,558 @@
+FORMAT: 1A
+
+# CSGF APIs
+
+CSGF APIs are a set of APIs designed to allow Science Gateways (SGs) to interact
+with remote infrastructures. The APIs allow the administrator to manage the
+infrastructures linked by the API server, and the user to interact with them.
+
+The user access has to be performed through a trust entity, generally a Sicence Gateway
+or an application connected with it, which has the control on the user privileges.
+
+
+# SG API Root [/]
+
+This resource return the versions available in the server with the link to access them.
+
+    It is recommend to follow the “url” link values,
+    [Link](https://tools.ietf.org/html/rfc5988) or Location headers where
+    applicable to retrieve resources. Instead of constructing your own URLs,
+    to keep your client decoupled from implementation details.
+
+## Retrieve the Entry Point [GET]
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </>; rel="self", </v1.0>; rel="v1.0"
+
+    + Body
+
+            {
+                "versions": [
+                    {
+                        "id": "v1.0",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0"
+                            }
+                        ],
+                        "media-types": [
+                            {
+                                "type": "application/json",
+                            }
+                        ],
+                        "status": "prototype",
+                        "updated": "2015-08-30T00:00:00Z"
+                    }
+                ],
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/"
+                    }
+                ]
+            }
+
+
+## Group v1.0
+
+The version 1.0 provides the minimum set of APIs to submit jobs in different infrastructures.
+Several aspects will not be address in this version and will be integrated in future releases.
+
+## Task Collection [/v1.0/tasks{?page}{?per_page}]
+
+A *task* is any activity a user send to an infrastructure, such as a run a job in a grid computing
+site or deploy a VM in a cloud. 
+
+
++ Parameters
+    + page: 1 (optional, number) - The page of tasks to return;
+    + per_page: 20 (optional, number) - The number of tasks per page to return.
+
+
+### List all tasks [GET]
+
+Retrive the list of tasks submitted by the user defined in the token. The list includes all the
+submitted tasks to the system. If the search has to be limited to a subset the attribute filter
+has to be used.
+
++ Request Auth
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/tasks?page=1>; rel="self",</v1.0/tasks?page=2>; rel="next"
+
+    + Body
+    
+            {
+                "tasks": [
+                    {
+                        "id": "123",
+                        "description": "This is my nice task 123",
+                        "status": "Waiting",
+                        "date": "2014-11-11T12:37:23.423Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/tasks/123"
+                            }
+                        ]
+                    }.
+                    {
+                        "id": "456",
+                        "description": "This is my nice task 456",
+                        "status": "Running",
+                        "date": "2014-11-11T09:12:34.421Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/tasks/456"
+                            }
+                        ]
+                    }.
+                    {
+                        "id": "789",
+                        "description": "This is my nice task 789",
+                        "status": "Done",
+                        "date": "2014-11-11T08:40:51.620Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/tasks/789"
+                            }
+                        ]
+                    }
+                ],
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks?page=1",
+                    },
+                    {
+                        "rel": "next",
+                        "href": "/v1.0/tasks?page=2",
+                    }
+                ]
+            }
+
+
+### Create a task [POST]
+
+Create a new task with the following attributes:
+
++ application (string) - Id of the application for the task. The application has to be
+already registered in the server in order to generate the task;
++ parameters (array[string]) - Parameters to provide to the application;
++ input_files (array[object]) - Name of input file for the application. These should be provided
+in order to make the task schedulable. If omitted the task is immediately ready to start.
+
+
+The input files has to be submitted after the creation of the task. The status will be waiting until
+a **POST** is performed of the input files. The URL to submit the files is returned in the **HTTP Header**
+of the **POST** as **Link** with `rel="input"`.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
+    + Body
+    
+            {
+                "application": "matlab",
+                "description": "This is my nice task",
+                "paramters": [
+                    "paramter_1",
+                    "paramter_2",
+                    "paramter_3",
+                    "paramter_4"
+                ],
+                "input_files": [
+                    "my_matlab_file.m"
+                ]
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v1.0/tasks/1234
+            Link: </v1.0/tasks/1234/input>; rel="input", </v1.0/tasks/1234>; rel="self"
+
+    + Body
+
+            {
+                "task": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "paramters": [
+                    "paramter_1",
+                    "paramter_2",
+                    "paramter_3",
+                    "paramter_4"
+                ],
+                "input_files": [
+                    {
+                        "name": "my_matlab_file.m",
+                        "url": null
+                    }
+                ],
+                "status": "Waiting",
+                "date": "2014-11-11T12:12:00.421Z",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks/1234"
+                    },
+                    {
+                        "rel": "input",
+                        "href": "/v1.0/tasks/1234/input"
+                    }
+                ]
+                
+            }
+
+
+### Replace the task list [PUT]
+
+Replacing the full list of task is not acceptable. A bulk operation can be performed using the
+**PATCH** method.
+
++ Response 405
+
+    + Headers
+
+            Allow: GET, POST, DELETE
+
+### Add multiple tasks to the list [PATCH]
+
+Create a new task with the following attributes:
+
++ application (string) - Id of the application for the task. The application has to be
+already registered in the server in order to generate the task;
++ parameters (array[string]) - Parameters to provide to the application;
++ input_files (array[object]) - Name of input file for the application. These should be provided
+in order to make the task schedulable. If omitted the task is immediately ready to start.
+
+
+The input files has to be submitted after the creation of the tasks. The status will be waiting until
+a *POST* is performed of the input files.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
+    + Body
+
+            {
+                [
+                    {
+                        "application": "matlab",
+                        "description": "This is my nice task",
+                        "paramters": [
+                            "paramter_1",
+                            "paramter_2",
+                            "paramter_3",
+                            "paramter_4"
+                        ],
+                        "input_files": [
+                            {
+                                "name": "my_matlab_file.m",
+                                "url": null
+                            }
+                        ]
+                    },
+                    {
+                        "application": "gromacs",
+                        "description": "This is my second task",
+                        "paramters": [
+                            "paramter_1",
+                            "paramter_2",
+                            "paramter_3",
+                            "paramter_4"
+                        ],
+                        "input_files": [
+                            {
+                                "name": "my_gromacs_file.gromacs",
+                                "url": null
+                            }
+                        ]
+                    }
+                ]
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                [
+                    {
+                        "task": "1234",
+                        "application": "matlab",
+                        "description": "This is my nice task",
+                        "paramters": [
+                            "paramter_1",
+                            "paramter_2",
+                            "paramter_3",
+                            "paramter_4"
+                        ],
+                        "input_files": [
+                            {
+                                "name": "my_matlab_file.m",
+                                "url": null
+                            }
+                        ],
+                        "status": "Waiting",
+                        "date": "2014-11-11T12:12:00.421Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/tasks/1234"
+                            },
+                            {
+                                "rel": "input",
+                                "href": "/v1.0/tasks/1234/input"
+                            }
+                        ]
+                    },
+                    {
+                        "task": "1235",
+                        "application": "gromacs",
+                        "description": "This is my second task",
+                        "paramters": [
+                            "paramter_1",
+                            "paramter_2",
+                            "paramter_3",
+                            "paramter_4"
+                        ],
+                        "input_files": [
+                            {
+                                "name": "my_gromacs_file.gromacs",
+                                "url": null
+                            }
+                        ],
+                        "status": "Waiting",
+                        "date": "2014-11-11T12:12:00.421Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/tasks/1234"
+                            },
+                            {
+                                "rel": "input",
+                                "href": "/v1.0/tasks/1234/input"
+                            }
+                        ]
+                    }
+                ]
+            }
+
+
+### Delete the task list [DELETE]
+
+Remove all tasks
+
++ Request Auth
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
++ Response 204
+
++ Response 403
+
+        User is not allow to remove the task list
+
++ Response 404
+
+        No tasks found
+
+## Task [/v1.0/tasks/{taskId}]
+
+A Task object has the following attributes:
+
++ task - The id of the task.
++ date - An ISO8601 date when the task was created.
++ last_change - An ISO8601 date when the task status was updated.
++ application - The id of the application associated with the task.
+* description - A user provided description of the task
+* status - The current status of the task. Possible values are:
+    - **Waiting**: Task created but input still required
+    - **Scheduled**: Task ready to execute in the selected infrastructure
+    - **Running**: In execution
+    - **Done**: Task completed
+    - **Aborted**: Some error prevent the task from the execution
+    - **Cancelled**: Task deleted by the user
++ parameters (array[string]) - Parameters to provide to the application.
++ input_files (array[object]) - Input file for the application.
++ output_files (array[string]) - Input file for the application.
+
++ Parameters
+    + taskId: 1234 (required, string) - ID of the Task
+
+### View a Tasks Detail [GET]
+
++ Request Auth
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/tasks/1234>; rel="self"
+
+    + Body
+
+            {
+                "task": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "paramters": [
+                    "paramter_1",
+                    "paramter_2",
+                    "paramter_3",
+                    "paramter_4"
+                ],
+                "input_files": [
+                    {
+                        "name": "my_matlab_file.m",
+                        "url": "/v1.0/tasks/1234/input"
+                    }
+                ],
+                "status": "Waiting",
+                "date": "2014-11-11T12:12:00.421Z",
+                "last_change": "2014-11-11T12:12:00.421Z",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks/1234"
+                    }
+                ]
+                
+            }
+
+
+### Create a new task [PUT]
+
+This method will create a new task with a specific ID not autogerated.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
+    + Body
+    
+            {
+                "task": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "paramters": [
+                    "paramter_1",
+                    "paramter_2",
+                    "paramter_3",
+                    "paramter_4"
+                ],
+                "input_files": [
+                    "my_matlab_file.m"
+                ]
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /v1.0/tasks/1234
+            Link: </v1.0/tasks/1234/input>; rel="input", </v1.0/tasks/1234>; rel="self"
+
+    + Body
+
+            {
+                "task": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "paramters": [
+                    "paramter_1",
+                    "paramter_2",
+                    "paramter_3",
+                    "paramter_4"
+                ],
+                "input_files": [
+                    {
+                        "name": "my_matlab_file.m",
+                        "url": null
+                    }
+                ],
+                "status": "Waiting",
+                "date": "2014-11-11T12:12:00.421Z",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks/1234"
+                    },
+                    {
+                        "rel": "input",
+                        "href": "/v1.0/tasks/1234/input"
+                    }
+                ]
+                
+            }
+
+
++ Response 403
+
+        Users should not be able to update entirely the task after the submission. APIs for some values, like
+        the description, are provided.
+
+
+### Delete a task [DELETE]
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer {access_token}
+
++ Response 204
+
++ Response 403
+
+        User is not allow to remove the task list
+
++ Response 404
+
+        No tasks found
+
+
+## Applications Collection [/v1.0/applications{?page}{?per_page}]
+
+The application represents the entity a user can submit to a remote infrastructure. This can
+be a Job in a computing grid, a VM in a cloud or other. The definition includes also the
+infrastructures where they can be submitted.
+
+
+
+## Roles Collection [/v1.0/roles{?page}{?per_page}]
+
+Roles should define who is authorised to execute an application. This need some investigation
+because the information should be in agreement with the service managing the user access (in
+the majority of the cases the SG).
