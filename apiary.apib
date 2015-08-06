@@ -6,7 +6,7 @@ CSGF APIs are a set of APIs designed to allow Science Gateways (SGs) to interact
 with remote infrastructures. The APIs allow the administrator to manage the
 infrastructures linked by the API server, and the user to interact with them.
 
-The user access has to be performed through a trust entity, generally a Sicence Gateway
+The user access has to be performed through a trust entity, generally a Science Gateway
 or an application connected with it, which has the control on the user privileges.
 
 
@@ -62,27 +62,27 @@ This resource return the versions available in the server with the link to acces
 The version 1.0 provides the minimum set of APIs to submit jobs in different infrastructures.
 Several aspects will not be address in this version and will be integrated in future releases.
 
-## Task Collection [/v1.0/tasks{?page}{?per_page}]
+## Task Collection [/v1.0/tasks{?page}{?per_page}{?status}]
 
 A *task* is any activity a user send to an infrastructure, such as a run a job in a grid computing
-site or deploy a VM in a cloud. 
+site or deploy a VM in a cloud.
 
 
 + Parameters
-    + page: 1 (optional, number) - The page of tasks to return;
+    + page: 1 (optional, number) - The page of tasks to return.
     + per_page: 20 (optional, number) - The number of tasks per page to return.
-
+    + status: any (optionam, string) - A filter to get only the tasks with the specified status.
 
 ### List all tasks [GET]
 
-Retrive the list of tasks submitted by the user defined in the token. The list includes all the
+Retrieve the list of tasks submitted by the user defined in the token. The list includes all the
 submitted tasks to the system. If the search has to be limited to a subset the attribute filter
 has to be used.
 
 + Request Auth
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
 
@@ -93,7 +93,7 @@ has to be used.
             Link: </v1.0/tasks?page=1>; rel="self",</v1.0/tasks?page=2>; rel="next"
 
     + Body
-    
+
             {
                 "tasks": [
                     {
@@ -154,7 +154,7 @@ Create a new task with the following attributes:
 already registered in the server in order to generate the task;
 + parameters (array[string]) - Parameters to provide to the application;
 + input_files (array[object]) - Name of input file for the application. These should be provided
-in order to make the task schedulable. If omitted the task is immediately ready to start.
+in order to make the task scheduled. If omitted the task is immediately ready to start.
 
 
 The input files has to be submitted after the creation of the task. The status will be waiting until
@@ -164,19 +164,19 @@ of the **POST** as **Link** with `rel="input"`.
 + Request (application/json)
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
     + Body
-    
+
             {
                 "application": "matlab",
                 "description": "This is my nice task",
-                "paramters": [
-                    "paramter_1",
-                    "paramter_2",
-                    "paramter_3",
-                    "paramter_4"
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
                 ],
                 "input_files": [
                     "my_matlab_file.m"
@@ -196,11 +196,11 @@ of the **POST** as **Link** with `rel="input"`.
                 "task": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
-                "paramters": [
-                    "paramter_1",
-                    "paramter_2",
-                    "paramter_3",
-                    "paramter_4"
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
                 ],
                 "input_files": [
                     {
@@ -220,7 +220,7 @@ of the **POST** as **Link** with `rel="input"`.
                         "href": "/v1.0/tasks/1234/input"
                     }
                 ]
-                
+
             }
 
 
@@ -243,7 +243,7 @@ Create a new task with the following attributes:
 already registered in the server in order to generate the task;
 + parameters (array[string]) - Parameters to provide to the application;
 + input_files (array[object]) - Name of input file for the application. These should be provided
-in order to make the task schedulable. If omitted the task is immediately ready to start.
+in order to make the task scheduled. If omitted the task is immediately ready to start.
 
 
 The input files has to be submitted after the creation of the tasks. The status will be waiting until
@@ -252,21 +252,21 @@ a *POST* is performed of the input files.
 + Request (application/json)
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
     + Body
 
             {
-                [
+                "tasks": [
                     {
                         "application": "matlab",
                         "description": "This is my nice task",
-                        "paramters": [
-                            "paramter_1",
-                            "paramter_2",
-                            "paramter_3",
-                            "paramter_4"
+                        "parameters": [
+                            "parameter_1",
+                            "parameter_2",
+                            "parameter_3",
+                            "parameter_4"
                         ],
                         "input_files": [
                             {
@@ -278,11 +278,11 @@ a *POST* is performed of the input files.
                     {
                         "application": "gromacs",
                         "description": "This is my second task",
-                        "paramters": [
-                            "paramter_1",
-                            "paramter_2",
-                            "paramter_3",
-                            "paramter_4"
+                        "parameters": [
+                            "parameter_1",
+                            "parameter_2",
+                            "parameter_3",
+                            "parameter_4"
                         ],
                         "input_files": [
                             {
@@ -299,16 +299,16 @@ a *POST* is performed of the input files.
     + Body
 
             {
-                [
+                "tasks": [
                     {
                         "task": "1234",
                         "application": "matlab",
                         "description": "This is my nice task",
-                        "paramters": [
-                            "paramter_1",
-                            "paramter_2",
-                            "paramter_3",
-                            "paramter_4"
+                        "parameters": [
+                            "parameter_1",
+                            "parameter_2",
+                            "parameter_3",
+                            "parameter_4"
                         ],
                         "input_files": [
                             {
@@ -333,11 +333,11 @@ a *POST* is performed of the input files.
                         "task": "1235",
                         "application": "gromacs",
                         "description": "This is my second task",
-                        "paramters": [
-                            "paramter_1",
-                            "paramter_2",
-                            "paramter_3",
-                            "paramter_4"
+                        "parameters": [
+                            "parameter_1",
+                            "parameter_2",
+                            "parameter_3",
+                            "parameter_4"
                         ],
                         "input_files": [
                             {
@@ -369,7 +369,7 @@ Remove all tasks
 + Request Auth
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
 + Response 204
@@ -410,7 +410,7 @@ A Task object has the following attributes:
 + Request Auth
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
 + Response 200 (application/json)
@@ -425,11 +425,11 @@ A Task object has the following attributes:
                 "task": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
-                "paramters": [
-                    "paramter_1",
-                    "paramter_2",
-                    "paramter_3",
-                    "paramter_4"
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
                 ],
                 "input_files": [
                     {
@@ -446,31 +446,34 @@ A Task object has the following attributes:
                         "href": "/v1.0/tasks/1234"
                     }
                 ]
-                
+
             }
 
 
 ### Create a new task [PUT]
 
-This method will create a new task with a specific ID not autogerated.
+This method will create a new task with a specific `ID` assigned by the user. If the
+`id` already exist the task is not modified but an error is returned to the user because
+the tasks are mot modifiable but only some parameters which have specific APIs for
+their update.
 
 + Request (application/json)
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
     + Body
-    
+
             {
                 "task": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
-                "paramters": [
-                    "paramter_1",
-                    "paramter_2",
-                    "paramter_3",
-                    "paramter_4"
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
                 ],
                 "input_files": [
                     "my_matlab_file.m"
@@ -480,7 +483,7 @@ This method will create a new task with a specific ID not autogerated.
 + Response 201 (application/json)
 
     + Headers
-    
+
             Location: /v1.0/tasks/1234
             Link: </v1.0/tasks/1234/input>; rel="input", </v1.0/tasks/1234>; rel="self"
 
@@ -490,11 +493,11 @@ This method will create a new task with a specific ID not autogerated.
                 "task": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
-                "paramters": [
-                    "paramter_1",
-                    "paramter_2",
-                    "paramter_3",
-                    "paramter_4"
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
                 ],
                 "input_files": [
                     {
@@ -514,7 +517,7 @@ This method will create a new task with a specific ID not autogerated.
                         "href": "/v1.0/tasks/1234/input"
                     }
                 ]
-                
+
             }
 
 
@@ -529,7 +532,7 @@ This method will create a new task with a specific ID not autogerated.
 + Request
 
     + Headers
-    
+
             Authorization: Bearer {access_token}
 
 + Response 204
@@ -549,6 +552,82 @@ The application represents the entity a user can submit to a remote infrastructu
 be a Job in a computing grid, a VM in a cloud or other. The definition includes also the
 infrastructures where they can be submitted.
 
++ Parameters
+    + page: 1 (optional, number) - The page of tasks to return;
+    + per_page: 20 (optional, number) - The number of tasks per page to return.
+
+
+### List all applications [GET]
+
+Retrieve the list of application the user is enabled to access.
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/applications?page=1>; rel="self",</v1.0/applications?page=2>; rel="next"
+
+    + Body
+
+            {
+                "applications": [
+                    {
+                        "id": "123",
+                        "name": "app1",
+                        "description": "This is my nice task 123",
+                        "date": "2014-11-11T12:37:23.423Z",
+                        "infrastructure": "id_infra",
+                        
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/applications/123"
+                            }
+                        ]
+                    }.
+                    {
+                        "id": "456",
+                        "description": "This is my nice task 456",
+                        "status": "Running",
+                        "date": "2014-11-11T09:12:34.421Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/applications/456"
+                            }
+                        ]
+                    }.
+                    {
+                        "id": "789",
+                        "description": "This is my nice task 789",
+                        "status": "Done",
+                        "date": "2014-11-11T08:40:51.620Z",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/tasks/789"
+                            }
+                        ]
+                    }
+                ],
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks?page=1",
+                    },
+                    {
+                        "rel": "next",
+                        "href": "/v1.0/tasks?page=2",
+                    }
+                ]
+            }
 
 
 ## Roles Collection [/v1.0/roles{?page}{?per_page}]
