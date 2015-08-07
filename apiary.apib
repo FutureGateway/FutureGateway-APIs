@@ -66,7 +66,7 @@ This resource return the versions available in the server with the link to acces
 The version 1.0 provides the minimum set of APIs to submit jobs in different infrastructures.
 Several aspects will not be address in this version and will be integrated in future releases.
 
-## Task Collection [/v1.0/tasks{?page}{?per_page}{?status}]
+## Task Collection [/v1.0/tasks{?page}{?per_page}{?status}{?user}]
 
 A *task* is any activity a user send to an infrastructure, such as a run a job in a grid computing
 site or deploy a VM in a cloud.
@@ -75,7 +75,9 @@ site or deploy a VM in a cloud.
 + Parameters
     + page: 1 (optional, number) - The page of tasks to return.
     + per_page: 20 (optional, number) - The number of tasks per page to return.
-    + status: any (optionam, string) - A filter to get only the tasks with the specified status.
+    + status: any (optional, string) - A filter to get only the tasks with the specified status.
+    + user: any (optional, string) - A filter to get only the tasks submitted by
+    a specific user. Only the admin can retrieve tasks submitted by different users.
 
 ### List all tasks [GET]
 
@@ -104,6 +106,7 @@ has to be used.
                         "id": "123",
                         "description": "This is my nice task 123",
                         "status": "Waiting",
+                        "user": "user_name"
                         "date": "2014-11-11T12:37:23.423Z",
                         "_links": [
                             {
@@ -116,6 +119,7 @@ has to be used.
                         "id": "456",
                         "description": "This is my nice task 456",
                         "status": "Running",
+                        "user": "user_name"
                         "date": "2014-11-11T09:12:34.421Z",
                         "_links": [
                             {
@@ -128,6 +132,7 @@ has to be used.
                         "id": "789",
                         "description": "This is my nice task 789",
                         "status": "Done",
+                        "user": "user_name"
                         "date": "2014-11-11T08:40:51.620Z",
                         "_links": [
                             {
@@ -213,6 +218,7 @@ of the **POST** as **Link** with `rel="input"`.
                     }
                 ],
                 "status": "Waiting",
+                "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "_links": [
                     {
@@ -321,6 +327,7 @@ a *POST* is performed of the input files.
                             }
                         ],
                         "status": "Waiting",
+                        "user": "user_name"
                         "date": "2014-11-11T12:12:00.421Z",
                         "_links": [
                             {
@@ -350,6 +357,7 @@ a *POST* is performed of the input files.
                             }
                         ],
                         "status": "Waiting",
+                        "user": "user_name"
                         "date": "2014-11-11T12:12:00.421Z",
                         "_links": [
                             {
@@ -403,6 +411,8 @@ A Task object has the following attributes:
     - **Done**: Task completed
     - **Aborted**: Some error prevent the task from the execution
     - **Cancelled**: Task deleted by the user
++ user - The user name submitting the task. This is retrieved from the token and if
+provided has to coincide.
 + parameters (array[string]) - Parameters to provide to the application.
 + input_files (array[object]) - Input file for the application.
 + output_files (array[string]) - Input file for the application.
@@ -443,6 +453,7 @@ A Task object has the following attributes:
                     }
                 ],
                 "status": "Waiting",
+                "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "last_change": "2014-11-11T12:12:00.421Z",
                 "_links": [
@@ -511,6 +522,7 @@ their update.
                     }
                 ],
                 "status": "Waiting",
+                "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "_links": [
                     {
@@ -906,22 +918,22 @@ to grid job but can also be the instantiation of a VM, the access to a remote cl
 and so on).
 
 
+
 ## Infrastructure [/v1.0/infrastructures/{infrastructure_id}]
 
-An application object has the following attributes:
+An infrastructure object has the following attributes:
 
 + id - The id of the application.
 + description - A verbose description of the application.
-+ name - User friendly name of the application.
-+ date - An ISO8601 date when the application was created.
++ name - User friendly name of the infrastructure.
++ date - An ISO8601 date when the infrastructure was created.
 + infrastructure - The id of the infrastructure associated with the application.
-+ enabled (boolean) - `true` if the users, having the right, can execute the application,
-`false` otherwise.
-+ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
-contains different attributes defined by the context and may vary from application to application.
++ enabled (boolean) - `true` if the infrastructure is accessible, `false` otherwise.
++ parameters (array[object]) - Parameters to access the infrastructure using SAGA.
+Different infrastructures have a very different parameters.
 
 + Parameters
-    + application_id: 1234 (required, string) - ID of the Application
+    + infrastructure_id: 1234 (required, string) - ID of the Infrastructure
 
 ### View an Application Detail [GET]
 
