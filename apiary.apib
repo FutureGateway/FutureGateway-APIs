@@ -301,7 +301,7 @@ a *POST* is performed of the input files.
             {
                 "tasks": [
                     {
-                        "task": "1234",
+                        "id": "1234",
                         "application": "matlab",
                         "description": "This is my nice task",
                         "parameters": [
@@ -330,7 +330,7 @@ a *POST* is performed of the input files.
                         ]
                     },
                     {
-                        "task": "1235",
+                        "id": "1235",
                         "application": "gromacs",
                         "description": "This is my second task",
                         "parameters": [
@@ -382,16 +382,16 @@ Remove all tasks
 
         No tasks found
 
-## Task [/v1.0/tasks/{taskId}]
+## Task [/v1.0/tasks/{task_id}]
 
 A Task object has the following attributes:
 
-+ task - The id of the task.
++ id - The id of the task.
 + date - An ISO8601 date when the task was created.
 + last_change - An ISO8601 date when the task status was updated.
 + application - The id of the application associated with the task.
-* description - A user provided description of the task
-* status - The current status of the task. Possible values are:
++ description - A user provided description of the task
++ status - The current status of the task. Possible values are:
     - **Waiting**: Task created but input still required
     - **Scheduled**: Task ready to execute in the selected infrastructure
     - **Running**: In execution
@@ -403,7 +403,7 @@ A Task object has the following attributes:
 + output_files (array[string]) - Input file for the application.
 
 + Parameters
-    + taskId: 1234 (required, string) - ID of the Task
+    + task_id: 1234 (required, string) - ID of the Task
 
 ### View a Tasks Detail [GET]
 
@@ -422,7 +422,7 @@ A Task object has the following attributes:
     + Body
 
             {
-                "task": "1234",
+                "id": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
                 "parameters": [
@@ -466,7 +466,7 @@ their update.
     + Body
 
             {
-                "task": "1234",
+                "id": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
                 "parameters": [
@@ -490,7 +490,7 @@ their update.
     + Body
 
             {
-                "task": "1234",
+                "id": "1234",
                 "application": "matlab",
                 "description": "This is my nice task",
                 "parameters": [
@@ -581,10 +581,8 @@ Retrieve the list of application the user is enabled to access.
                     {
                         "id": "123",
                         "name": "app1",
-                        "description": "This is my nice task 123",
-                        "date": "2014-11-11T12:37:23.423Z",
-                        "infrastructure": "id_infra",
-                        
+                        "description": "This is the app: app1",
+                        "infrastructure": "id_infra_1",
                         "_links": [
                             {
                                 "rel": "self",
@@ -594,9 +592,9 @@ Retrieve the list of application the user is enabled to access.
                     }.
                     {
                         "id": "456",
-                        "description": "This is my nice task 456",
-                        "status": "Running",
-                        "date": "2014-11-11T09:12:34.421Z",
+                        "name": "app2",
+                        "description": "This is the app: app2",
+                        "infrastructure": "id_infra_2",
                         "_links": [
                             {
                                 "rel": "self",
@@ -606,13 +604,13 @@ Retrieve the list of application the user is enabled to access.
                     }.
                     {
                         "id": "789",
-                        "description": "This is my nice task 789",
-                        "status": "Done",
-                        "date": "2014-11-11T08:40:51.620Z",
+                        "name": "app3",
+                        "description": "This is the app: app3",
+                        "infrastructure": "id_infra_3",
                         "_links": [
                             {
                                 "rel": "self",
-                                "href": "/v1.0/tasks/789"
+                                "href": "/v1.0/applications/789"
                             }
                         ]
                     }
@@ -620,15 +618,157 @@ Retrieve the list of application the user is enabled to access.
                 "_links": [
                     {
                         "rel": "self",
-                        "href": "/v1.0/tasks?page=1",
+                        "href": "/v1.0/applications?page=1",
                     },
                     {
                         "rel": "next",
-                        "href": "/v1.0/tasks?page=2",
+                        "href": "/v1.0/applications?page=2",
                     }
                 ]
             }
 
+
+### Add a new application [POST]
+
+Add a new application using the following attributes:
++ description - A verbose description of the application.
++ name - User friendly name of the application.
++ infrastructure - The id of the infrastructure associated with the application.
++ enabled (boolean) - `true` if the users, having the right, can execute the application,
+`false` otherwise.
++ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
+contains different attributes defined by the context and may vary from application to application.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+    + Body
+
+            {
+              "name": "my_app",
+              "description": "This is the app: my_app",
+              "infrastructure": "id_infra_2",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "enabled": true
+              }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v1.0/applications/456
+            Link: </v1.0/applications/456>; rel="self"
+
+    + Body
+
+            {
+              "id": "456",
+              "name": "my_app",
+              "description": "This is the app: my_app",
+              "infrastructure": "id_infra_2",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "date": "2014-11-11T12:12:00.421Z",
+              "enabled": true,
+              "_links": [
+                  {
+                      "rel": "self",
+                      "href": "/v1.0/applications/456"
+                  }
+              ]
+            }
+
+
++ Response 403
+
+        This operation is allowed only to the administrators
+
+
+## Application [/v1.0/applications/{application_id}]
+
+An application object has the following attributes:
+
++ id - The id of the application.
++ description - A verbose description of the application.
++ name - User friendly name of the application.
++ date - An ISO8601 date when the application was created.
++ infrastructure - The id of the infrastructure associated with the application.
++ enabled (boolean) - `true` if the users, having the right, can execute the application,
+`false` otherwise.
++ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
+contains different attributes defined by the context and may vary from application to application.
+
++ Parameters
+    + application_id: 1234 (required, string) - ID of the Application
+
+### View an Application Detail [GET]
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/applications/1234>; rel="self"
+
+    + Body
+
+            {
+                "id": "1234",
+                "name": "app3",
+                "description": "This is the app: app3",
+                "infrastructure": "id_infra_3",
+                "parameters": [
+                  {
+                    "name": "param_1",
+                    "value": "value_1",
+                    "description": "This define something"
+                  },
+                  {
+                    "name": "param_2",
+                    "value": ["value_2_1", "value_2_2"]
+                  }
+                ],
+                "date": "2014-11-11T12:12:00.421Z",
+                "enabled": true,
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/applications/1234"
+                    }
+                ]
+            }
+
+
+## Infrastructures Collection [/v1.0/roles{?page}{?per_page}]
+
+Infrastructures where applications can execute
 
 ## Roles Collection [/v1.0/roles{?page}{?per_page}]
 
