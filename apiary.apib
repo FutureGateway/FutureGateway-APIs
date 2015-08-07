@@ -706,6 +706,26 @@ contains different attributes defined by the context and may vary from applicati
         This operation is allowed only to the administrators
 
 
+### Remove all applications [DELETE]
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
++ Response 204
+
++ Response 403
+
+        User is not allow to remove the applications list
+
++ Response 404
+
+        No applications found
+
+
+
 ## Application [/v1.0/applications/{application_id}]
 
 An application object has the following attributes:
@@ -764,6 +784,113 @@ contains different attributes defined by the context and may vary from applicati
                     }
                 ]
             }
+
+
+### Update an Application [PUT]
+
+Add a new application or modifying an existing one, using the following attributes:
++ description - A verbose description of the application.
++ name - User friendly name of the application.
++ infrastructure - The id of the infrastructure associated with the application.
++ enabled (boolean) - `true` if the users, having the right, can execute the application,
+`false` otherwise.
++ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
+contains different attributes defined by the context and may vary from application to application.
+
+The creation date cannot be modified by the user.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+    + Body
+
+            {
+              "id": "1234",
+              "name": "my_app",
+              "description": "This is the app: my_app",
+              "infrastructure": "id_infra_2",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "enabled": true
+              }
+
++ Response 200
+
+        Application updated correctly.
+
+
++ Response 201 (application/json)
+
+        Application was not existing so it is created
+
+    + Headers
+
+            Location: /v1.0/applications/456
+            Link: </v1.0/applications/456>; rel="self"
+
+    + Body
+
+            {
+              "id": "456",
+              "name": "my_app",
+              "description": "This is the app: my_app",
+              "infrastructure": "id_infra_2",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "date": "2014-11-11T12:12:00.421Z",
+              "enabled": true,
+              "_links": [
+                  {
+                      "rel": "self",
+                      "href": "/v1.0/applications/456"
+                  }
+              ]
+            }
+
+
++ Response 403
+
+        This operation is allowed only to the administrators
+
+
+### Delete an application [DELETE]
+
++ Request
+
+    + Headers
+
+        Authorization: Bearer {access_token}
+
++ Response 204
+
++ Response 403
+
+        User is not allow to remove the application
+
++ Response 404
+
+        No applications found
 
 
 ## Infrastructures Collection [/v1.0/roles{?page}{?per_page}]
