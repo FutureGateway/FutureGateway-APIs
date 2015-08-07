@@ -6,8 +6,12 @@ CSGF APIs are a set of APIs designed to allow Science Gateways (SGs) to interact
 with remote infrastructures. The APIs allow the administrator to manage the
 infrastructures linked by the API server, and the user to interact with them.
 
-The user access has to be performed through a trust entity, generally a Science Gateway
+APIs use a token to authenticate and authorise the users. The format is **JWT**
+and it is released by a trust entity, generally a Science Gateway
 or an application connected with it, which has the control on the user privileges.
+The token will contain the user name and the associated roles. The APIs server
+is able to validate the token autonomously and verify if the roles included are
+enough for the requested operation.
 
 
 # CSGF API Root [/]
@@ -61,6 +65,170 @@ This resource return the versions available in the server with the link to acces
 
 The version 1.0 provides the minimum set of APIs to submit jobs in different infrastructures.
 Several aspects will not be address in this version and will be integrated in future releases.
+
+## Task [/v1.0/tasks/{task_id}]
+
+A Task object has the following attributes:
+
++ id - The id of the task.
++ date - An ISO8601 date when the task was created.
++ last_change - An ISO8601 date when the task status was updated.
++ application - The id of the application associated with the task.
++ description - A user provided description of the task
++ status - The current status of the task. Possible values are:
+    - **Waiting**: Task created but input still required
+    - **Scheduled**: Task ready to execute in the selected infrastructure
+    - **Running**: In execution
+    - **Done**: Task completed
+    - **Aborted**: Some error prevent the task from the execution
+    - **Cancelled**: Task deleted by the user
++ parameters (array[string]) - Parameters to provide to the application.
++ input_files (array[object]) - Input file for the application.
++ output_files (array[string]) - Input file for the application.
+
++ Parameters
+    + task_id: 1234 (required, string) - ID of the Task
+
+### View a Tasks Detail [GET]
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/tasks/1234>; rel="self"
+
+    + Body
+
+            {
+                "id": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
+                ],
+                "input_files": [
+                    {
+                        "name": "my_matlab_file.m",
+                        "url": "/v1.0/tasks/1234/input"
+                    }
+                ],
+                "status": "Waiting",
+                "date": "2014-11-11T12:12:00.421Z",
+                "last_change": "2014-11-11T12:12:00.421Z",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks/1234"
+                    }
+                ]
+
+            }
+
+
+### Create a new task [PUT]
+
+This method will create a new task with a specific `ID` assigned by the user. If the
+`id` already exist the task is not modified but an error is returned to the user because
+the tasks are mot modifiable but only some parameters which have specific APIs for
+their update.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+    + Body
+
+            {
+                "id": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
+                ],
+                "input_files": [
+                    "my_matlab_file.m"
+                ]
+            }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /v1.0/tasks/1234
+            Link: </v1.0/tasks/1234/input>; rel="input", </v1.0/tasks/1234>; rel="self"
+
+    + Body
+
+            {
+                "id": "1234",
+                "application": "matlab",
+                "description": "This is my nice task",
+                "parameters": [
+                    "parameter_1",
+                    "parameter_2",
+                    "parameter_3",
+                    "parameter_4"
+                ],
+                "input_files": [
+                    {
+                        "name": "my_matlab_file.m",
+                        "url": null
+                    }
+                ],
+                "status": "Waiting",
+                "date": "2014-11-11T12:12:00.421Z",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks/1234"
+                    },
+                    {
+                        "rel": "input",
+                        "href": "/v1.0/tasks/1234/input"
+                    }
+                ]
+
+            }
+
+
++ Response 403
+
+        Users should not be able to update entirely the task after the submission. APIs for some values, like
+        the description, are provided.
+
+
+### Delete a task [DELETE]
+
++ Request
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
++ Response 204
+
++ Response 403
+
+        User is not allow to remove the task list
+
++ Response 404
+
+        No tasks found
+
 
 ## Task Collection [/v1.0/tasks{?page}{?per_page}{?status}]
 
@@ -382,30 +550,26 @@ Remove all tasks
 
         No tasks found
 
-## Task [/v1.0/tasks/{task_id}]
 
-A Task object has the following attributes:
 
-+ id - The id of the task.
-+ date - An ISO8601 date when the task was created.
-+ last_change - An ISO8601 date when the task status was updated.
-+ application - The id of the application associated with the task.
-+ description - A user provided description of the task
-+ status - The current status of the task. Possible values are:
-    - **Waiting**: Task created but input still required
-    - **Scheduled**: Task ready to execute in the selected infrastructure
-    - **Running**: In execution
-    - **Done**: Task completed
-    - **Aborted**: Some error prevent the task from the execution
-    - **Cancelled**: Task deleted by the user
-+ parameters (array[string]) - Parameters to provide to the application.
-+ input_files (array[object]) - Input file for the application.
-+ output_files (array[string]) - Input file for the application.
+## Application [/v1.0/applications/{application_id}]
+
+An application object has the following attributes:
+
++ id - The id of the application.
++ description - A verbose description of the application.
++ name - User friendly name of the application.
++ date - An ISO8601 date when the application was created.
++ infrastructure - The id of the infrastructure associated with the application.
++ enabled (boolean) - `true` if the users, having the right, can execute the application,
+`false` otherwise.
++ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
+contains different attributes defined by the context and may vary from application to application.
 
 + Parameters
-    + task_id: 1234 (required, string) - ID of the Task
+    + application_id: 1234 (required, string) - ID of the Application
 
-### View a Tasks Detail [GET]
+### View an Application Detail [GET]
 
 + Request Auth
 
@@ -417,45 +581,49 @@ A Task object has the following attributes:
 
     + Headers
 
-            Link: </v1.0/tasks/1234>; rel="self"
+            Link: </v1.0/applications/1234>; rel="self"
 
     + Body
 
             {
                 "id": "1234",
-                "application": "matlab",
-                "description": "This is my nice task",
+                "name": "app3",
+                "description": "This is the app: app3",
+                "infrastructure": "id_infra_3",
                 "parameters": [
-                    "parameter_1",
-                    "parameter_2",
-                    "parameter_3",
-                    "parameter_4"
+                  {
+                    "name": "param_1",
+                    "value": "value_1",
+                    "description": "This define something"
+                  },
+                  {
+                    "name": "param_2",
+                    "value": ["value_2_1", "value_2_2"]
+                  }
                 ],
-                "input_files": [
-                    {
-                        "name": "my_matlab_file.m",
-                        "url": "/v1.0/tasks/1234/input"
-                    }
-                ],
-                "status": "Waiting",
                 "date": "2014-11-11T12:12:00.421Z",
-                "last_change": "2014-11-11T12:12:00.421Z",
+                "enabled": true,
                 "_links": [
                     {
                         "rel": "self",
-                        "href": "/v1.0/tasks/1234"
+                        "href": "/v1.0/applications/1234"
                     }
                 ]
-
             }
 
 
-### Create a new task [PUT]
+### Update an Application [PUT]
 
-This method will create a new task with a specific `ID` assigned by the user. If the
-`id` already exist the task is not modified but an error is returned to the user because
-the tasks are mot modifiable but only some parameters which have specific APIs for
-their update.
+Add a new application or modifying an existing one, using the following attributes:
++ description - A verbose description of the application.
++ name - User friendly name of the application.
++ infrastructure - The id of the infrastructure associated with the application.
++ enabled (boolean) - `true` if the users, having the right, can execute the application,
+`false` otherwise.
++ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
+contains different attributes defined by the context and may vary from application to application.
+
+The creation date cannot be modified by the user.
 
 + Request (application/json)
 
@@ -466,84 +634,89 @@ their update.
     + Body
 
             {
-                "id": "1234",
-                "application": "matlab",
-                "description": "This is my nice task",
-                "parameters": [
-                    "parameter_1",
-                    "parameter_2",
-                    "parameter_3",
-                    "parameter_4"
-                ],
-                "input_files": [
-                    "my_matlab_file.m"
-                ]
-            }
+              "id": "1234",
+              "name": "my_app",
+              "description": "This is the app: my_app",
+              "infrastructure": "id_infra_2",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "enabled": true
+              }
+
++ Response 200
+
+        Application updated correctly.
+
 
 + Response 201 (application/json)
 
+        Application was not existing so it is created
+
     + Headers
 
-            Location: /v1.0/tasks/1234
-            Link: </v1.0/tasks/1234/input>; rel="input", </v1.0/tasks/1234>; rel="self"
+            Location: /v1.0/applications/456
+            Link: </v1.0/applications/456>; rel="self"
 
     + Body
 
             {
-                "id": "1234",
-                "application": "matlab",
-                "description": "This is my nice task",
-                "parameters": [
-                    "parameter_1",
-                    "parameter_2",
-                    "parameter_3",
-                    "parameter_4"
-                ],
-                "input_files": [
-                    {
-                        "name": "my_matlab_file.m",
-                        "url": null
-                    }
-                ],
-                "status": "Waiting",
-                "date": "2014-11-11T12:12:00.421Z",
-                "_links": [
-                    {
-                        "rel": "self",
-                        "href": "/v1.0/tasks/1234"
-                    },
-                    {
-                        "rel": "input",
-                        "href": "/v1.0/tasks/1234/input"
-                    }
-                ]
-
+              "id": "456",
+              "name": "my_app",
+              "description": "This is the app: my_app",
+              "infrastructure": "id_infra_2",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "date": "2014-11-11T12:12:00.421Z",
+              "enabled": true,
+              "_links": [
+                  {
+                      "rel": "self",
+                      "href": "/v1.0/applications/456"
+                  }
+              ]
             }
 
 
 + Response 403
 
-        Users should not be able to update entirely the task after the submission. APIs for some values, like
-        the description, are provided.
+        This operation is allowed only to the administrators
 
 
-### Delete a task [DELETE]
+### Delete an application [DELETE]
 
 + Request
 
     + Headers
 
-            Authorization: Bearer {access_token}
+        Authorization: Bearer {access_token}
 
 + Response 204
 
 + Response 403
 
-        User is not allow to remove the task list
+        User is not allow to remove the application
 
 + Response 404
 
-        No tasks found
+        No applications found
 
 
 ## Applications Collection [/v1.0/applications{?page}{?per_page}]
@@ -725,177 +898,12 @@ contains different attributes defined by the context and may vary from applicati
         No applications found
 
 
-
-## Application [/v1.0/applications/{application_id}]
-
-An application object has the following attributes:
-
-+ id - The id of the application.
-+ description - A verbose description of the application.
-+ name - User friendly name of the application.
-+ date - An ISO8601 date when the application was created.
-+ infrastructure - The id of the infrastructure associated with the application.
-+ enabled (boolean) - `true` if the users, having the right, can execute the application,
-`false` otherwise.
-+ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
-contains different attributes defined by the context and may vary from application to application.
-
-+ Parameters
-    + application_id: 1234 (required, string) - ID of the Application
-
-### View an Application Detail [GET]
-
-+ Request Auth
-
-    + Headers
-
-            Authorization: Bearer {access_token}
-
-+ Response 200 (application/json)
-
-    + Headers
-
-            Link: </v1.0/applications/1234>; rel="self"
-
-    + Body
-
-            {
-                "id": "1234",
-                "name": "app3",
-                "description": "This is the app: app3",
-                "infrastructure": "id_infra_3",
-                "parameters": [
-                  {
-                    "name": "param_1",
-                    "value": "value_1",
-                    "description": "This define something"
-                  },
-                  {
-                    "name": "param_2",
-                    "value": ["value_2_1", "value_2_2"]
-                  }
-                ],
-                "date": "2014-11-11T12:12:00.421Z",
-                "enabled": true,
-                "_links": [
-                    {
-                        "rel": "self",
-                        "href": "/v1.0/applications/1234"
-                    }
-                ]
-            }
-
-
-### Update an Application [PUT]
-
-Add a new application or modifying an existing one, using the following attributes:
-+ description - A verbose description of the application.
-+ name - User friendly name of the application.
-+ infrastructure - The id of the infrastructure associated with the application.
-+ enabled (boolean) - `true` if the users, having the right, can execute the application,
-`false` otherwise.
-+ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
-contains different attributes defined by the context and may vary from application to application.
-
-The creation date cannot be modified by the user.
-
-+ Request (application/json)
-
-    + Headers
-
-            Authorization: Bearer {access_token}
-
-    + Body
-
-            {
-              "id": "1234",
-              "name": "my_app",
-              "description": "This is the app: my_app",
-              "infrastructure": "id_infra_2",
-              "parameters": [
-                {
-                  "name": "param_1",
-                  "value": "value_1",
-                  "description": "This define something"
-                },
-                {
-                  "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
-                }
-              ],
-              "enabled": true
-              }
-
-+ Response 200
-
-        Application updated correctly.
-
-
-+ Response 201 (application/json)
-
-        Application was not existing so it is created
-
-    + Headers
-
-            Location: /v1.0/applications/456
-            Link: </v1.0/applications/456>; rel="self"
-
-    + Body
-
-            {
-              "id": "456",
-              "name": "my_app",
-              "description": "This is the app: my_app",
-              "infrastructure": "id_infra_2",
-              "parameters": [
-                {
-                  "name": "param_1",
-                  "value": "value_1",
-                  "description": "This define something"
-                },
-                {
-                  "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
-                }
-              ],
-              "date": "2014-11-11T12:12:00.421Z",
-              "enabled": true,
-              "_links": [
-                  {
-                      "rel": "self",
-                      "href": "/v1.0/applications/456"
-                  }
-              ]
-            }
-
-
-+ Response 403
-
-        This operation is allowed only to the administrators
-
-
-### Delete an application [DELETE]
-
-+ Request
-
-    + Headers
-
-        Authorization: Bearer {access_token}
-
-+ Response 204
-
-+ Response 403
-
-        User is not allow to remove the application
-
-+ Response 404
-
-        No applications found
-
-
 ## Infrastructures Collection [/v1.0/roles{?page}{?per_page}]
 
-Infrastructures where applications can execute
+Infrastructures where applications can execute. Each infrastructure contains all the
+properties used by **jSAGA** to submit a job (a SAGA job in this context is not limited
+to grid job but can also be the instantiation of a VM, the access to a remote cluster
+and so on).
 
 ## Roles Collection [/v1.0/roles{?page}{?per_page}]
 
