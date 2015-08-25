@@ -415,12 +415,12 @@ A Task object has the following attributes:
 provided has to coincide.
 + parameters (array[string]) - Parameters to provide to the application.
 + input_files (array[object]) - Input file for the application.
-+ output_files (array[string]) - Input file for the application.
++ output_files (array[string]) - Output files of the application.
 
 + Parameters
     + task_id: 1234 (required, string) - ID of the Task
 
-### View a Tasks Detail [GET]
+### View a Tasks Details [GET]
 
 Retrieves the details of the specified task.
 
@@ -762,7 +762,7 @@ contains different attributes defined by the context and may vary from applicati
 + Parameters
     + application_id: 1234 (required, string) - ID of the Application
 
-### View an Application Detail [GET]
+### View an Application Details [GET]
 
 Retrieves the details of the specified application.
 
@@ -858,13 +858,13 @@ The creation date cannot be modified by the user.
 
     + Headers
 
-            Location: /v1.0/applications/456
-            Link: </v1.0/applications/456>; rel="self"
+            Location: /v1.0/applications/1234
+            Link: </v1.0/applications/1234>; rel="self"
 
     + Body
 
             {
-              "id": "456",
+              "id": "1234",
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructure": "id_infra_2",
@@ -884,7 +884,7 @@ The creation date cannot be modified by the user.
               "_links": [
                   {
                       "rel": "self",
-                      "href": "/v1.0/applications/456"
+                      "href": "/v1.0/applications/1234"
                   }
               ]
             }
@@ -1087,7 +1087,154 @@ An infrastructure object has the following attributes:
 + Parameters
     + infrastructure_id: 1234 (required, string) - ID of the Infrastructure
 
-### View an Application Detail [GET]
+### View an Infrastructure Details [GET]
+
+Retrieves the details of the specified infrastructure.
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/infrastructures/1234>; rel="self"
+
+    + Body
+
+            {
+                "id": "1234",
+                "name": "infra_x",
+                "description": "This is the new infra_x",
+                "parameters": [
+                  {
+                    "name": "param_1",
+                    "value": "value_1",
+                    "description": "This define something"
+                  },
+                  {
+                    "name": "param_2",
+                    "value": ["value_2_1", "value_2_2"]
+                  }
+                ],
+                "date": "2015-08-11T12:12:00.421Z",
+                "enabled": true,
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/infrastructures/1234"
+                    }
+                ]
+            }
+
+
+### Update an Infrastructure [PUT]
+
+Add a new infrastructure or modifying an existing one, using the following attributes:
++ description - A verbose description of the application.
++ name - User friendly name of the application.
++ enabled (boolean) - `true` if the users, having the right, can execute the application,
+`false` otherwise.
++ parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
+contains different attributes defined by the context and may vary from application to application.
+
+The creation date cannot be modified by the user.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+    + Body
+
+            {
+              "id": "1234",
+              "name": "infra_x",
+              "description": "This is the new infra_x",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "enabled": true
+              }
+
++ Response 200
+
+        Application updated correctly.
+
+
++ Response 201 (application/json)
+
+        Application was not existing so it is created
+
+    + Headers
+
+            Location: /v1.0/infrastructures/1234
+            Link: </v1.0/infrastructures/1234>; rel="self"
+
+    + Body
+
+            {
+              "id": "1234",
+              "name": "infra_x",
+              "description": "This is the new infra_x",
+              "parameters": [
+                {
+                  "name": "param_1",
+                  "value": "value_1",
+                  "description": "This define something"
+                },
+                {
+                  "name": "param_2",
+                  "value": ["value_2_1", "value_2_2"]
+                }
+              ],
+              "date": "2014-11-11T12:12:00.421Z",
+              "enabled": true,
+              "_links": [
+                  {
+                      "rel": "self",
+                      "href": "/v1.0/infrastructures/1234"
+                  }
+              ]
+            }
+
+
++ Response 403
+
+        This operation is allowed only to the administrators
+
+
+### Delete an application [DELETE]
+
++ Request
+
+    + Headers
+
+        Authorization: Bearer {access_token}
+
++ Response 204
+
++ Response 403
+
+        User is not allow to remove the application
+
++ Response 404
+
+        No applications found
+
+
 
 
 ## Roles Collection [/v1.0/roles{?page}{?per_page}]
