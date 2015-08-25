@@ -578,7 +578,7 @@ infrastructures where they can be submitted.
 
 ### List all applications [GET]
 
-Retrieve the list of application the user is enabled to access.
+Retrieve the list of applications the user is enabled to access.
 
 + Request Auth
 
@@ -920,6 +920,77 @@ Infrastructures where applications can execute. Each infrastructure contains all
 properties used by **jSAGA** to submit a job (a SAGA job in this context is not limited
 to grid job but can also be the instantiation of a VM, the access to a remote cluster
 and so on).
+
+
+### List all infrastructures [GET]
+
+Retrieve the list of infrastructures where applications can be granted to execute.
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/infrastructures?page=1>; rel="self",</v1.0/infrastructures?page=2>; rel="next"
+
+    + Body
+
+            {
+                "applications": [
+                    {
+                        "id": "123",
+                        "name": "app1",
+                        "description": "This is the app: app1",
+                        "infrastructure": "id_infra_1",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/applications/123"
+                            }
+                        ]
+                    }.
+                    {
+                        "id": "456",
+                        "name": "app2",
+                        "description": "This is the app: app2",
+                        "infrastructure": "id_infra_2",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/applications/456"
+                            }
+                        ]
+                    }.
+                    {
+                        "id": "789",
+                        "name": "app3",
+                        "description": "This is the app: app3",
+                        "infrastructure": "id_infra_3",
+                        "_links": [
+                            {
+                                "rel": "self",
+                                "href": "/v1.0/applications/789"
+                            }
+                        ]
+                    }
+                ],
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/applications?page=1",
+                    },
+                    {
+                        "rel": "next",
+                        "href": "/v1.0/applications?page=2",
+                    }
+                ]
+            }
 
 
 
