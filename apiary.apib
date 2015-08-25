@@ -1242,3 +1242,26 @@ The creation date cannot be modified by the user.
 Roles should define who is authorised to execute an application. This need some investigation
 because the information should be in agreement with the service managing the user access (in
 the majority of the cases the SG).
+
+
+### List all roles [GET]
+
+Retrieve the list of roles
+
++ Request Auth
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Link: </v1.0/roles?page=1>; rel="self",</v1.0/roles?page=2>; rel="next"
+
+    + Body
+
+            {
+            }
