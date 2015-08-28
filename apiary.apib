@@ -567,7 +567,7 @@ their update.
 
 ## Applications Collection [/v1.0/applications{?page}{?per_page}]
 
-The application represents the entity a user can submit to a remote infrastructure. This can
+The *application* represents the entity a user can submit to a remote infrastructure. This can
 be a Job in a computing grid, a VM in a cloud or other. The definition includes also the
 infrastructures where they can be submitted.
 
@@ -916,10 +916,10 @@ The creation date cannot be modified by the user.
 
 ## Infrastructures Collection [/v1.0/infrastructures{?page}{?per_page}]
 
-Infrastructures where applications can execute. Each infrastructure contains all the
-properties used by **jSAGA** to submit a job (a SAGA job in this context is not limited
-to grid job but can also be the instantiation of a VM, the access to a remote cluster
-and so on).
+The *infrastructure* represents the remote facility where applications can
+execute. Each infrastructure contains all the properties used by **jSAGA** to
+submit a job (a SAGA job in this context is not limited to grid job but can also
+be the instantiation of a VM, the access to a remote cluster and so on).
 
 
 ### List all infrastructures [GET]
