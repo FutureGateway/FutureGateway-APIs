@@ -601,7 +601,7 @@ Retrieve the list of applications the user is enabled to access.
                         "id": "123",
                         "name": "app1",
                         "description": "This is the app: app1",
-                        "infrastructure": "id_infra_1",
+                        "infrastructure": ["id_infra_1"],
                         "_links": [
                             {
                                 "rel": "self",
@@ -613,7 +613,7 @@ Retrieve the list of applications the user is enabled to access.
                         "id": "456",
                         "name": "app2",
                         "description": "This is the app: app2",
-                        "infrastructure": "id_infra_2",
+                        "infrastructure": ["id_infra_2"],
                         "_links": [
                             {
                                 "rel": "self",
@@ -625,7 +625,7 @@ Retrieve the list of applications the user is enabled to access.
                         "id": "789",
                         "name": "app3",
                         "description": "This is the app: app3",
-                        "infrastructure": "id_infra_3",
+                        "infrastructure": ["id_infra_3"],
                         "_links": [
                             {
                                 "rel": "self",
@@ -652,7 +652,7 @@ Retrieve the list of applications the user is enabled to access.
 Add a new application using the following attributes:
 + description - A verbose description of the application.
 + name - User friendly name of the application.
-+ infrastructure - The id of the infrastructure associated with the application.
++ infrastructure - A list of infrastructure ids associated with the application.
 + enabled (boolean) - `true` if the users, having the right, can execute the application,
 `false` otherwise.
 + parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
@@ -669,7 +669,7 @@ contains different attributes defined by the context and may vary from applicati
             {
               "name": "my_app",
               "description": "This is the app: my_app",
-              "infrastructure": "id_infra_2",
+              "infrastructure": ["id_infra_2"],
               "parameters": [
                 {
                   "name": "param_1",
@@ -697,7 +697,7 @@ contains different attributes defined by the context and may vary from applicati
               "id": "456",
               "name": "my_app",
               "description": "This is the app: my_app",
-              "infrastructure": "id_infra_2",
+              "infrastructure": ["id_infra_2"],
               "parameters": [
                 {
                   "name": "param_1",
@@ -753,7 +753,7 @@ An application object has the following attributes:
 + description - A verbose description of the application.
 + name - User friendly name of the application.
 + date - An ISO8601 date when the application was created.
-+ infrastructure - The id of the infrastructure associated with the application.
++ infrastructure - A list of infrastructure ids associated with the application.
 + enabled (boolean) - `true` if the users, having the right, can execute the application,
 `false` otherwise.
 + parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
@@ -784,7 +784,7 @@ Retrieves the details of the specified application.
                 "id": "1234",
                 "name": "app3",
                 "description": "This is the app: app3",
-                "infrastructure": "id_infra_3",
+                "infrastructure": ["id_infra_3"],
                 "parameters": [
                   {
                     "name": "param_1",
@@ -832,7 +832,7 @@ The creation date cannot be modified by the user.
               "id": "1234",
               "name": "my_app",
               "description": "This is the app: my_app",
-              "infrastructure": "id_infra_2",
+              "infrastructure": ["id_infra_2"],
               "parameters": [
                 {
                   "name": "param_1",
@@ -867,7 +867,7 @@ The creation date cannot be modified by the user.
               "id": "1234",
               "name": "my_app",
               "description": "This is the app: my_app",
-              "infrastructure": "id_infra_2",
+              "infrastructure": ["id_infra_2"],
               "parameters": [
                 {
                   "name": "param_1",
