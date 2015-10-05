@@ -105,7 +105,7 @@ has to be used.
                     {
                         "id": "123",
                         "description": "This is my nice task 123",
-                        "status": "Waiting",
+                        "status": "WAITING",
                         "user": "user_name"
                         "date": "2014-11-11T12:37:23.423Z",
                         "_links": [
@@ -118,7 +118,7 @@ has to be used.
                     {
                         "id": "456",
                         "description": "This is my nice task 456",
-                        "status": "Running",
+                        "status": "RUNNING",
                         "user": "user_name"
                         "date": "2014-11-11T09:12:34.421Z",
                         "_links": [
@@ -131,7 +131,7 @@ has to be used.
                     {
                         "id": "789",
                         "description": "This is my nice task 789",
-                        "status": "Done",
+                        "status": "DONE",
                         "user": "user_name"
                         "date": "2014-11-11T08:40:51.620Z",
                         "_links": [
@@ -217,7 +217,7 @@ of the **POST** as **Link** with `rel="input"`.
                         "url": null
                     }
                 ],
-                "status": "Waiting",
+                "status": "WAITING",
                 "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "_links": [
@@ -326,7 +326,7 @@ a *POST* is performed of the input files.
                                 "url": null
                             }
                         ],
-                        "status": "Waiting",
+                        "status": "WAITING",
                         "user": "user_name"
                         "date": "2014-11-11T12:12:00.421Z",
                         "_links": [
@@ -356,7 +356,7 @@ a *POST* is performed of the input files.
                                 "url": null
                             }
                         ],
-                        "status": "Waiting",
+                        "status": "WAITING",
                         "user": "user_name"
                         "date": "2014-11-11T12:12:00.421Z",
                         "_links": [
@@ -405,12 +405,12 @@ A Task object has the following attributes:
 + application - The id of the application associated with the task.
 + description - A user provided description of the task
 + status - The current status of the task. Possible values are:
-    - **Waiting**: Task created but input still required
-    - **Scheduled**: Task ready to execute in the selected infrastructure
-    - **Running**: In execution
-    - **Done**: Task completed
-    - **Aborted**: Some error prevent the task from the execution
-    - **Cancelled**: Task deleted by the user
+    - **WAITING**: Task created but input still required
+    - **SCHEDULED**: Task ready to execute in the selected infrastructure
+    - **RUNNING**: In execution
+    - **DONE**: Task completed
+    - **ABORTED**: Some error prevent the task from the execution
+    - **CANCELLED**: Task deleted by the user
 + user - The user name submitting the task. This is retrieved from the token and if
 provided has to coincide.
 + parameters (array[string]) - Parameters to provide to the application.
@@ -454,7 +454,7 @@ Retrieves the details of the specified task.
                         "url": "/v1.0/tasks/1234/input"
                     }
                 ],
-                "status": "Waiting",
+                "status": "WAITING",
                 "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "last_change": "2014-11-11T12:12:00.421Z",
@@ -523,7 +523,7 @@ their update.
                         "url": null
                     }
                 ],
-                "status": "Waiting",
+                "status": "WAITING",
                 "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "_links": [
