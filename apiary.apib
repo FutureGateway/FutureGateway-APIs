@@ -179,7 +179,7 @@ of the **POST** as **Link** with `rel="input"`.
     + Body
 
             {
-                "application": "matlab",
+                "application": "543",
                 "description": "This is my nice task",
                 "arguments": [
                     "arg_1",
@@ -203,7 +203,7 @@ of the **POST** as **Link** with `rel="input"`.
 
             {
                 "task": "1234",
-                "application": "matlab",
+                "application": "543",
                 "description": "This is my nice task",
                 "arguments": [
                     "arg_1",
@@ -270,7 +270,7 @@ a *POST* is performed of the input files.
             {
                 "tasks": [
                     {
-                        "application": "matlab",
+                        "application": "543",
                         "description": "This is my nice task",
                         "arguments": [
                             "arg_1",
@@ -286,7 +286,7 @@ a *POST* is performed of the input files.
                         ]
                     },
                     {
-                        "application": "gromacs",
+                        "application": "765",
                         "description": "This is my second task",
                         "arguments": [
                             "arg_1",
@@ -312,7 +312,7 @@ a *POST* is performed of the input files.
                 "tasks": [
                     {
                         "id": "1234",
-                        "application": "matlab",
+                        "application": "543",
                         "description": "This is my nice task",
                         "arguments": [
                             "arg_1",
@@ -342,7 +342,7 @@ a *POST* is performed of the input files.
                     },
                     {
                         "id": "1235",
-                        "application": "gromacs",
+                        "application": "765",
                         "description": "This is my second task",
                         "arguments": [
                             "arg_1",
@@ -403,7 +403,7 @@ A Task object has the following attributes:
 + date - An ISO8601 date when the task was created.
 + last_change - An ISO8601 date when the task status was updated.
 + application - The id of the application associated with the task.
-+ description - A user provided description of the task
++ description - A user provided description of the task.
 + status - The current status of the task. Possible values are:
     - **WAITING**: Task created but input still required
     - **SCHEDULED**: Task ready to execute in the selected infrastructure
@@ -440,7 +440,7 @@ Retrieves the details of the specified task.
 
             {
                 "id": "1234",
-                "application": "matlab",
+                "application": "543",
                 "description": "This is my nice task",
                 "arguments": [
                     "arg_1",
@@ -485,7 +485,7 @@ their update.
 
             {
                 "id": "1234",
-                "application": "matlab",
+                "application": "543",
                 "description": "This is my nice task",
                 "arguments": [
                     "arg_1",
@@ -509,7 +509,7 @@ their update.
 
             {
                 "id": "1234",
-                "application": "matlab",
+                "application": "543",
                 "description": "This is my nice task",
                 "arguments": [
                     "arg_1",
