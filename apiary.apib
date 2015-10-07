@@ -161,12 +161,12 @@ Create a new task with the following attributes:
 
 + application (string) - Id of the application for the task. The application has to be
 already registered in the server in order to generate the task;
-+ parameters (array[string]) - Parameters to provide to the application;
++ arguments (array[string]) - Arguments to provide to the application;
 + input_files (array[object]) - Name of input file for the application. These should be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
 
 
-The input files has to be submitted after the creation of the task. The status will be waiting until
+The input files have to be submitted after the creation of the task. The status will be waiting until
 a **POST** is performed of the input files. The URL to submit the files is returned in the **HTTP Header**
 of the **POST** as **Link** with `rel="input"`.
 
@@ -251,7 +251,7 @@ Create a new task with the following attributes:
 
 + application (string) - Id of the application for the task. The application has to be
 already registered in the server in order to generate the task;
-+ parameters (array[string]) - Parameters to provide to the application;
++ arguments (array[string]) - Arguments to provide to the application;
 + input_files (array[object]) - Name of input file for the application. These should be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
 
