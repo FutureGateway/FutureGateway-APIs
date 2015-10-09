@@ -164,6 +164,8 @@ already registered in the server in order to generate the task;
 + arguments (array[string]) - Arguments to provide to the application;
 + input_files (array[object]) - Name of input file for the application. These should be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
++ output_files (array[string]) - List of output files produced by the application in addition to
+the stdout and stderr.
 
 
 The input files have to be submitted after the creation of the task. The status will be waiting until
@@ -254,6 +256,8 @@ already registered in the server in order to generate the task;
 + arguments (array[string]) - Arguments to provide to the application;
 + input_files (array[object]) - Name of input file for the application. These should be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
++ output_files (array[string]) - List of output files produced by the application in addition to
+the stdout and stderr.
 
 
 The input files has to be submitted after the creation of the tasks. The status will be waiting until
