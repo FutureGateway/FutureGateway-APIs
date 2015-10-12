@@ -216,7 +216,7 @@ of the **POST** as **Link** with `rel="input"`.
                 "input_files": [
                     {
                         "name": "my_matlab_file.m",
-                        "url": null
+                        "status": "NEEDED"
                     }
                 ],
                 "status": "WAITING",
@@ -285,7 +285,7 @@ a *POST* is performed of the input files.
                         "input_files": [
                             {
                                 "name": "my_matlab_file.m",
-                                "url": null
+                                "status": "NEEDED"
                             }
                         ]
                     },
@@ -301,7 +301,7 @@ a *POST* is performed of the input files.
                         "input_files": [
                             {
                                 "name": "my_gromacs_file.gromacs",
-                                "url": null
+                                "status": "NEEDED"
                             }
                         ]
                     }
@@ -327,7 +327,7 @@ a *POST* is performed of the input files.
                         "input_files": [
                             {
                                 "name": "my_matlab_file.m",
-                                "url": null
+                                "status": "NEEDED"
                             }
                         ],
                         "status": "WAITING",
@@ -357,7 +357,7 @@ a *POST* is performed of the input files.
                         "input_files": [
                             {
                                 "name": "my_gromacs_file.gromacs",
-                                "url": null
+                                "status": "NEEDED"
                             }
                         ],
                         "status": "WAITING",
@@ -418,8 +418,16 @@ A Task object has the following attributes:
 + user - The user name submitting the task. This is retrieved from the token and if
 provided has to coincide.
 + arguments (array[string]) - Arguments to provide to the application.
-+ input_files (array[object]) - Input file for the application.
-+ output_files (array[string]) - Output files of the application.
++ input_files (array[string] | array[object]) - Input file for the application.
+When the task is create a list of filename is provided as input_files. These files
+have to be uploaded in order to make the task `SCHEDULED`. The task detail provide
+an object for the each input file with the attributes: **name** and **status**.
+The **status** can be `NEEDED` if the input file has not been provided or `READY`
+otherwise.
++ output_files (array[string] | array[object]) - Output files of the application.
+During the task creation the user can specify a list of files to retrieve after
+the execution. The task details provide an a object for each output file containing
+the name and the URL for download.
 
 + Parameters
     + task_id: 1234 (required, string) - ID of the Task
@@ -455,10 +463,10 @@ Retrieves the details of the specified task.
                 "input_files": [
                     {
                         "name": "my_matlab_file.m",
-                        "url": "/v1.0/tasks/1234/input"
+                        "status": "READY"
                     }
                 ],
-                "status": "WAITING",
+                "status": "RUNNING",
                 "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
                 "last_change": "2014-11-11T12:12:00.421Z",
@@ -499,6 +507,9 @@ their update.
                 ],
                 "input_files": [
                     "my_matlab_file.m"
+                ],
+                "output_files": [
+                    "mydata.csv"
                 ]
             }
 
@@ -524,9 +535,15 @@ their update.
                 "input_files": [
                     {
                         "name": "my_matlab_file.m",
-                        "url": null
+                        "status": "NEEDED"
                     }
                 ],
+                "output_files": [
+                    {
+                        "name": "mydata.csv",
+                        "url": null
+                    }
+                ]
                 "status": "WAITING",
                 "user": "user_name"
                 "date": "2014-11-11T12:12:00.421Z",
