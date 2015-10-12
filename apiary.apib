@@ -254,7 +254,7 @@ Create a new task with the following attributes:
 + application (string) - Id of the application for the task. The application has to be
 already registered in the server in order to generate the task;
 + arguments (array[string]) - Arguments to provide to the application;
-+ input_files (array[object]) - Name of input file for the application. These should be provided
++ input_files (array[string]) - Name of input files for the application. Files have to be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
 + output_files (array[string]) - List of output files produced by the application in addition to
 the stdout and stderr.
