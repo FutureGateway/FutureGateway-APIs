@@ -190,7 +190,9 @@ of the **POST** as **Link** with `rel="input"`.
                     "arg_4"
                 ],
                 "input_files": [
-                    "my_matlab_file.m"
+                    {
+                        "name": "my_matlab_file.m"
+                    }
                 ]
             }
 
@@ -284,8 +286,7 @@ a *POST* is performed of the input files.
                         ],
                         "input_files": [
                             {
-                                "name": "my_matlab_file.m",
-                                "status": "NEEDED"
+                                "name": "my_matlab_file.m"
                             }
                         ]
                     },
@@ -300,8 +301,7 @@ a *POST* is performed of the input files.
                         ],
                         "input_files": [
                             {
-                                "name": "my_gromacs_file.gromacs",
-                                "status": "NEEDED"
+                                "name": "my_gromacs_file.gromacs"
                             }
                         ]
                     }
@@ -506,10 +506,14 @@ their update.
                     "arg_4"
                 ],
                 "input_files": [
-                    "my_matlab_file.m"
+                    {
+                        "name": "my_matlab_file.m"
+                    }
                 ],
                 "output_files": [
-                    "mydata.csv"
+                    {
+                        "name": "mydata.csv"
+                    }
                 ]
             }
 
