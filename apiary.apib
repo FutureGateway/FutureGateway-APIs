@@ -25,7 +25,7 @@ This resource return the versions available in the server with the link to acces
 
 ## Retrieve the Entry Point [GET]
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -45,7 +45,7 @@ This resource return the versions available in the server with the link to acces
                         ],
                         "media-types": [
                             {
-                                "type": "application/json",
+                                "type": "application/vnd.indigo-datacloud.apiserver+json",
                             }
                         ],
                         "status": "prototype",
@@ -92,7 +92,7 @@ has to be used.
             Authorization: Bearer {access_token}
 
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -169,7 +169,7 @@ The input files have to be submitted after the creation of the task. The status 
 a **POST** is performed of the input files. The URL to submit the files is returned in the **HTTP Header**
 of the **POST** as **Link** with `rel="input"`.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -193,7 +193,7 @@ of the **POST** as **Link** with `rel="input"`.
                 ]
             }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -262,7 +262,7 @@ the stdout and stderr.
 The input files has to be submitted after the creation of the tasks. The status will be waiting until
 a *POST* is performed of the input files.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -305,7 +305,7 @@ a *POST* is performed of the input files.
                 ]
             }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Body
 
@@ -407,6 +407,7 @@ A Task object has the following attributes:
 + description - A user provided description of the task.
 + status - The current status of the task. Possible values are:
     - **WAITING**: Task created but input still required
+    - **READY**: Task ready to be scheduled to the infrastructure
     - **SCHEDULED**: Task ready to execute in the selected infrastructure
     - **RUNNING**: In execution
     - **DONE**: Task completed
@@ -439,7 +440,7 @@ Retrieves the details of the specified task.
 
             Authorization: Bearer {access_token}
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -484,7 +485,7 @@ This method will create a new task with a specific `ID` assigned by the user. If
 the tasks are mot modifiable but only some parameters which have specific APIs for
 their update.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -514,7 +515,7 @@ their update.
                 ]
             }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -609,7 +610,7 @@ Retrieve the list of applications the user is enabled to access.
             Authorization: Bearer {access_token}
 
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -680,7 +681,7 @@ Add a new application using the following attributes:
 + parameters (array[object]) - Parameters to set-up for the execution environment. Each parameter
 contains different attributes defined by the context and may vary from application to application.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -706,7 +707,7 @@ contains different attributes defined by the context and may vary from applicati
               "enabled": true
               }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -794,7 +795,7 @@ Retrieves the details of the specified application.
 
             Authorization: Bearer {access_token}
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -842,7 +843,7 @@ contains different attributes defined by the context and may vary from applicati
 
 The creation date cannot be modified by the user.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -874,7 +875,7 @@ The creation date cannot be modified by the user.
         Application updated correctly.
 
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
         Application was not existing so it is created
 
@@ -955,7 +956,7 @@ Retrieve the list of infrastructures where applications can be granted to execut
             Authorization: Bearer {access_token}
 
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -1009,7 +1010,7 @@ Add a new infrastructure using the following attributes:
 + enabled (boolean) - `true` if the infrastructure is accessible, `false` otherwise.
 + parameters (array[object]) - Parameters to access the infrastructure using SAGA.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -1034,7 +1035,7 @@ Add a new infrastructure using the following attributes:
               "enabled": true
               }
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -1119,7 +1120,7 @@ Retrieves the details of the specified infrastructure.
 
             Authorization: Bearer {access_token}
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -1165,7 +1166,7 @@ contains different attributes defined by the context and may vary from applicati
 
 The creation date cannot be modified by the user.
 
-+ Request (application/json)
++ Request (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
@@ -1196,7 +1197,7 @@ The creation date cannot be modified by the user.
         Application updated correctly.
 
 
-+ Response 201 (application/json)
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
 
         Application was not existing so it is created
 
@@ -1277,7 +1278,7 @@ Retrieve the list of roles
             Authorization: Bearer {access_token}
 
 
-+ Response 200 (application/json)
++ Response 200 (application/vnd.indigo-datacloud.apiserver+json)
 
     + Headers
 
