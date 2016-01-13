@@ -426,6 +426,10 @@ otherwise.
 During the task creation the user can specify a list of files to retrieve after
 the execution. The task details provide an a object for each output file containing
 the name and the URL for download.
++ runtime_data (array[object]) - Information of the running task provided back to
+the user. This is needed to allow users to interact with the application. As an
+example, for a task running a VM the runtime_data can contains the ip address
+and the credentials.
 
 + Parameters
     + task_id: 1234 (required, string) - ID of the Task
@@ -465,7 +469,18 @@ Retrieves the details of the specified task.
                     }
                 ],
                 "status": "RUNNING",
-                "user": "user_name"
+                "user": "user_name",
+                "runtime_data": [
+                    {
+                        "name": "data_1",
+                        "value": "value_1",
+                        "description": "This define something"
+                    },
+                    {
+                        "name": "data_2",
+                        "value": "value_2"
+                    }
+                ]
                 "date": "2014-11-11T12:12:00.421Z",
                 "last_change": "2014-11-11T12:12:00.421Z",
                 "_links": [
@@ -704,7 +719,7 @@ contains different attributes defined by the context and may vary from applicati
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "enabled": true
@@ -732,7 +747,7 @@ contains different attributes defined by the context and may vary from applicati
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "date": "2014-11-11T12:12:00.421Z",
@@ -819,7 +834,7 @@ Retrieves the details of the specified application.
                   },
                   {
                     "name": "param_2",
-                    "value": ["value_2_1", "value_2_2"]
+                    "value": "value_2"
                   }
                 ],
                 "date": "2014-11-11T12:12:00.421Z",
@@ -867,7 +882,7 @@ The creation date cannot be modified by the user.
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "enabled": true
@@ -902,7 +917,7 @@ The creation date cannot be modified by the user.
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "date": "2014-11-11T12:12:00.421Z",
@@ -1034,7 +1049,7 @@ Add a new infrastructure using the following attributes:
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "enabled": true
@@ -1061,7 +1076,7 @@ Add a new infrastructure using the following attributes:
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "date": "2015-08-11T12:12:00.421Z",
@@ -1145,7 +1160,7 @@ Retrieves the details of the specified infrastructure.
                   },
                   {
                     "name": "param_2",
-                    "value": ["value_2_1", "value_2_2"]
+                    "value": "value_2"
                   }
                 ],
                 "date": "2015-08-11T12:12:00.421Z",
@@ -1191,7 +1206,7 @@ The creation date cannot be modified by the user.
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "enabled": true
@@ -1225,7 +1240,7 @@ The creation date cannot be modified by the user.
                 },
                 {
                   "name": "param_2",
-                  "value": ["value_2_1", "value_2_2"]
+                  "value": "value_2"
                 }
               ],
               "date": "2014-11-11T12:12:00.421Z",
