@@ -1,10 +1,10 @@
 FORMAT: 1A
 
-# CSGF APIs
+# FutureGateway APIs
 
-CSGF APIs are a set of APIs designed to allow Science Gateways (SGs) to interact
-with remote infrastructures. The APIs allow the administrator to manage the
-infrastructures linked by the API server, and the user to interact with them.
+FutureGateway APIs are a set of APIs designed to allow Science Gateways (SGs) to
+interact with remote infrastructures. The APIs allow the administrator to manage
+the infrastructures linked by the API server, and the user to interact with them.
 
 APIs use a token to authenticate and authorise the users. The format is **JWT**
 and it is released by a trust entity, generally a Science Gateway
@@ -14,7 +14,7 @@ is able to validate the token autonomously and verify if the roles included are
 enough for the requested operation.
 
 
-# CSGF API Root [/]
+# FutureGateway API Root [/]
 
 This resource return the versions available in the server with the link to access them.
 
@@ -429,7 +429,8 @@ the name and the URL for download.
 + runtime_data (array[object]) - Information of the running task provided back to
 the user. This is needed to allow users to interact with the application. As an
 example, for a task running a VM the runtime_data can contains the ip address
-and the credentials.
+and the credentials. The format is similar to parameters with the addition of
+two optional time fields: *creation* and *last_change*.
 
 + Parameters
     + task_id: 1234 (required, string) - ID of the Task
@@ -474,7 +475,9 @@ Retrieves the details of the specified task.
                     {
                         "name": "data_1",
                         "value": "value_1",
-                        "description": "This define something"
+                        "description": "This define something",
+                        "creation" : "2014-11-11T12:12:00.421Z",
+                        "last_change": "2014-11-11T12:12:01.352Z"
                     },
                     {
                         "name": "data_2",
