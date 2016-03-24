@@ -653,6 +653,7 @@ Retrieve the list of applications the user is enabled to access.
                         "name": "app1",
                         "infrastructures": ["id_infra_1"],
                         "date": "2015-05-11T12:12:00.421Z",
+                        "type": "job",
                         "enabled": true,
                         "_links": [
                             {
@@ -666,6 +667,7 @@ Retrieve the list of applications the user is enabled to access.
                         "name": "app2",
                         "infrastructures": ["id_infra_2"],
                         "date": "2015-07-15T16:12:20.537Z",
+                        "type": "job",
                         "enabled": true,
                         "_links": [
                             {
@@ -679,6 +681,7 @@ Retrieve the list of applications the user is enabled to access.
                         "name": "app3",
                         "infrastructures": ["id_infra_3"],
                         "date": "2015-11-11T18:42:32.289Z",
+                        "type": "resource",
                         "enabled": false,
                         "_links": [
                             {
@@ -707,6 +710,9 @@ Add a new application using the following attributes:
 + **description** *(string)* - A verbose description of the application.
 + **name** *(string)* - User friendly name of the application.
 + **infrastructures** *(array[string])* - A list of infrastructure ids associated with the application.
++ **type** *(string)* - If the value is `job` the application can allow to execute job. If
+the value is `resource` the application allows to create resources, like virtual
+machines, containers, etc.... When not specified the default value is `job`.
 + **enabled** *(boolean)* - `true` if the users, having the right, can execute the application,
 `false` otherwise.
 + **parameters** *(array[object])* - Parameters to set-up for the execution environment. Each parameter
@@ -724,6 +730,7 @@ contains different attributes defined by the context and may vary from applicati
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructures": ["id_infra_2"],
+              "type": "job",
               "parameters": [
                 {
                   "name": "param_1",
@@ -752,6 +759,7 @@ contains different attributes defined by the context and may vary from applicati
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructures": ["id_infra_2"],
+              "type": "job",
               "parameters": [
                 {
                   "name": "param_1",
@@ -808,6 +816,9 @@ An application object has the following attributes:
 + **name** *(string)* - User friendly name of the application.
 + **date** *(date)* - An ISO8601 date when the application was created.
 + **infrastructures** *(array[string])* - A list of infrastructure ids associated with the application.
++ **type** *(string)* - If the value is `job` the application can allow to execute job. If
+the value is `resource` the application allows to create resources, like virtual
+machines, containers, etc.... When not specified the default value is `job`.
 + **enabled** *(boolean)* - `true` if the users, having the right, can execute the application,
 `false` otherwise.
 + **parameters** *(array[object])* - Parameters to set-up for the execution environment. Each parameter
@@ -839,6 +850,7 @@ Retrieves the details of the specified application.
                 "name": "app3",
                 "description": "This is the app: app3",
                 "infrastructures": ["id_infra_3"],
+                "type": "job",
                 "parameters": [
                   {
                     "name": "param_1",
@@ -922,6 +934,7 @@ The creation date cannot be modified by the user.
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructures": ["id_infra_2"],
+              "type": "job",
               "parameters": [
                 {
                   "name": "param_1",
@@ -1002,7 +1015,7 @@ Retrieve the list of infrastructures where applications can be granted to execut
                         "name": "infra1",
                         "date": "2015-08-11T12:12:00.421Z",
                         "enabled": true,
-                        "type": "job",
+                        "virtual": false,
                         "_links": [
                             {
                                 "rel": "self",
@@ -1015,7 +1028,7 @@ Retrieve the list of infrastructures where applications can be granted to execut
                         "name": "infra2",
                         "date": "2015-08-14T16:37:34.563Z",
                         "enabled": false,
-                        "type": "resource",
+                        "virtual": true,
                         "_links": [
                             {
                                 "rel": "self",
@@ -1043,9 +1056,8 @@ Add a new infrastructure using the following attributes:
 + **name** *(string)* - User friendly name of the infrastructure.
 + **description** *(string)* - A verbose description of the application.
 + **enabled** *(boolean)* - `true` if the infrastructure is accessible, `false` otherwise.
-+ **type** *(string)* - If the value is `job` the infrastructure can allow to execute job. If
-the value is `resource` the infrastructure allows to create resources, like virtual
-machines, containers, etc.... When not specified the default value is `job`.
++ **virtual** *(boolean)* - `true` if the infrastructure is virtual, `false` otherwise. An
+infrastructure is virtual if it is generated by a running task of a resource application. Default is `false`.
 + **parameters** *(array[object])* - Parameters to access the infrastructure using SAGA.
 
 + Request (application/vnd.indigo-datacloud.apiserver+json)
@@ -1059,7 +1071,7 @@ machines, containers, etc.... When not specified the default value is `job`.
             {
               "name": "infra_x",
               "description": "This is the new infra_x",
-              "type": "job",
+              "virtual": false,
               "parameters": [
                 {
                   "name": "param_1",
@@ -1087,7 +1099,7 @@ machines, containers, etc.... When not specified the default value is `job`.
               "id": "456",
               "name": "infra_x",
               "description": "This is the new infra_x",
-              "type": "job",
+              "virtual": false,
               "parameters": [
                 {
                   "name": "param_1",
@@ -1142,13 +1154,12 @@ An infrastructure object has the following attributes:
 + *+name** *(string)* - User friendly name of the infrastructure.
 + **description** *(string)* - A verbose description of the application.
 + **date** *(date)* - An ISO8601 date when the infrastructure was created.
-+ **type** *(string)* - If the value is `job` the infrastructure can allow to execute job. If
-the value is `resource` the infrastructure allows to create resources, like virtual
-machines, containers, etc.... When not specified the default value is `job`.
 + **enabled** *(boolean)* - `true` if the infrastructure is accessible, `false` otherwise.
++ **virtual** *(boolean)* - `true` if the infrastructure is virtual, `false` otherwise. An
+infrastructure is virtual if it is generated by a running task of a resource application. Default is `false`.
 + **parameters** *(array[object])* - Parameters to access the infrastructure using SAGA.
-The infrastructure can be virtual, generated by an _application_ and in this case
-the **applications** paramter has to be present with value a list of application
+The infrastructure can be virtual, generated by an application and in this case
+the _applications_ parameter is needed and it has to contain a list of application
 ids able to generate the infrastructure.
 
 *Note: Different infrastructures may have different parameters*.
@@ -1178,7 +1189,7 @@ Retrieves the details of the specified infrastructure.
                 "id": "1234",
                 "name": "infra_x",
                 "description": "This is the new infra_x",
-                "type": "job",
+                "virtual": false,
                 "parameters": [
                   {
                     "name": "param_1",
@@ -1225,7 +1236,7 @@ The creation date cannot be modified by the user.
               "id": "1234",
               "name": "infra_x",
               "description": "This is the new infra_x",
-              "type": "job",
+              "virtual": false,
               "parameters": [
                 {
                   "name": "param_1",
@@ -1260,7 +1271,7 @@ The creation date cannot be modified by the user.
               "id": "1234",
               "name": "infra_x",
               "description": "This is the new infra_x",
-              "type": "job",
+              "virtual": false,
               "parameters": [
                 {
                   "name": "param_1",
