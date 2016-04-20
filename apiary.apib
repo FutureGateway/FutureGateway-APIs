@@ -653,7 +653,7 @@ Retrieve the list of applications the user is enabled to access.
                         "name": "app1",
                         "infrastructures": ["id_infra_1"],
                         "date": "2015-05-11T12:12:00.421Z",
-                        "type": "JOB",
+                        "outcome": "JOB",
                         "enabled": true,
                         "_links": [
                             {
@@ -667,7 +667,7 @@ Retrieve the list of applications the user is enabled to access.
                         "name": "app2",
                         "infrastructures": ["id_infra_2"],
                         "date": "2015-07-15T16:12:20.537Z",
-                        "type": "JOB",
+                        "outcome": "JOB",
                         "enabled": true,
                         "_links": [
                             {
@@ -681,7 +681,7 @@ Retrieve the list of applications the user is enabled to access.
                         "name": "app3",
                         "infrastructures": ["id_infra_3"],
                         "date": "2015-11-11T18:42:32.289Z",
-                        "type": "RESOURCE",
+                        "outcome": "RESOURCE",
                         "enabled": false,
                         "_links": [
                             {
@@ -710,7 +710,7 @@ Add a new application using the following attributes:
 + **description** *(string)* - A verbose description of the application.
 + **name** *(string)* - User friendly name of the application.
 + **infrastructures** *(array[string])* - A list of infrastructure ids associated with the application.
-+ **type** *(string)* - If the value is `JOB` the application can allow to execute job. If
++ **outcome** *(string)* - If the value is `JOB` the application can allow to execute job. If
 the value is `RESOURCE` the application allows to create resources, like virtual
 machines, containers, etc.... When not specified the default value is `JOB`.
 + **enabled** *(boolean)* - `true` if the users, having the right, can execute the application,
@@ -730,7 +730,7 @@ contains different attributes defined by the context and may vary from applicati
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructures": ["id_infra_2"],
-              "type": "JOB",
+              "outcome": "JOB",
               "parameters": [
                 {
                   "name": "param_1",
@@ -759,7 +759,7 @@ contains different attributes defined by the context and may vary from applicati
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructures": ["id_infra_2"],
-              "type": "JOB",
+              "outcome": "JOB",
               "parameters": [
                 {
                   "name": "param_1",
@@ -816,7 +816,7 @@ An application object has the following attributes:
 + **name** *(string)* - User friendly name of the application.
 + **date** *(date)* - An ISO8601 date when the application was created.
 + **infrastructures** *(array[string])* - A list of infrastructure ids associated with the application.
-+ **type** *(string)* - If the value is `JOB` the application can allow to execute job. If
++ **outcome** *(string)* - If the value is `JOB` the application can allow to execute job. If
 the value is `RESOURCE` the application allows to create resources, like virtual
 machines, containers, etc.... When not specified the default value is `JOB`.
 + **enabled** *(boolean)* - `true` if the users, having the right, can execute the application,
@@ -850,7 +850,7 @@ Retrieves the details of the specified application.
                 "name": "app3",
                 "description": "This is the app: app3",
                 "infrastructures": ["id_infra_3"],
-                "type": "JOB",
+                "outcome": "JOB",
                 "parameters": [
                   {
                     "name": "param_1",
@@ -934,7 +934,7 @@ The creation date cannot be modified by the user.
               "name": "my_app",
               "description": "This is the app: my_app",
               "infrastructures": ["id_infra_2"],
-              "type": "JOB",
+              "outcome": "JOB",
               "parameters": [
                 {
                   "name": "param_1",
