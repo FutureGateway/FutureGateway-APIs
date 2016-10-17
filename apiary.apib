@@ -236,6 +236,10 @@ of the **POST** as **Link** with `rel="input"`.
 
             }
 
++ Response 403
+
+        User is not allow to create a task
+
 
 ### Replace the task list [PUT]
 
@@ -503,6 +507,10 @@ Retrieves the details of the specified task.
 
             }
 
++ Response 403
+
+        User is not allow to retrieve details for the task
+
 
 ### Create a new task [PUT]
 
@@ -596,6 +604,77 @@ their update.
         Users should not be able to update entirely the task after the submission. APIs for some values, like
         the description, are provided.
 
+### Modify a task [PATCH]
+
+This method will modify the task with a specific `ID` assigned by the user.
+Currently only the status can be modified and the only value accepted is `CANCELLED`.
+This has the effect to stop the task, free the associated resources and clean the temporary
+storage.
+
++ Request (application/vnd.indigo-datacloud.apiserver+json)
+
+    + Headers
+
+            Authorization: Bearer {access_token}
+
+    + Body
+
+            {
+                "status": "CANCELLED",
+            }
+
++ Response 201 (application/vnd.indigo-datacloud.apiserver+json)
+
+    + Headers
+
+            Location: /v1.0/tasks/1234
+            Link: </v1.0/tasks/1234/input>; rel="input", </v1.0/tasks/1234>; rel="self"
+
+    + Body
+
+            {
+                "id": "1234",
+                "application": "543",
+                "description": "This is my nice task",
+                "infrastructure_task": "1233",
+                "arguments": [
+                    "arg_1",
+                    "arg_2",
+                    "arg_3",
+                    "arg_4"
+                ],
+                "input_files": [
+                    {
+                        "name": "my_matlab_file.m",
+                        "status": "READY"
+                    }
+                ],
+                "output_files": [
+                    {
+                        "name": "mydata.csv",
+                        "url": null
+                    }
+                ]
+                "status": "CANCELLED",
+                "user": "user_name"
+                "date": "2014-11-11T12:12:00.421Z",
+                "_links": [
+                    {
+                        "rel": "self",
+                        "href": "/v1.0/tasks/1234"
+                    },
+                    {
+                        "rel": "input",
+                        "href": "/v1.0/tasks/1234/input"
+                    }
+                ]
+
+            }
+
+
++ Response 403
+
+        User is not authorised to modify the task.
 
 ### Delete a task [DELETE]
 
