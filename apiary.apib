@@ -18,7 +18,7 @@ enough for the requested operation.
 
 This resource return the versions available in the server with the link to access them.
 
-    It is recommend to follow the “url” link values,
+    It is recommended to follow the “url” link values,
     [Link](https://tools.ietf.org/html/rfc5988) or Location headers where
     applicable to retrieve resources. Instead of constructing your own URLs,
     to keep your client decoupled from implementation details.
@@ -161,9 +161,9 @@ Create a new task with the following attributes:
 + **application** *(string)* - Id of the application for the task. The application has to be
 already registered in the server in order to generate the task;
 + **arguments** *(array[string])* - Arguments to provide to the application;
-+ **input_files** *(array[object])* - Name of input file for the application. These should be provided
++ **input_files** *(array[string] | array[object])* - Name of input file for the application. These should be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
-+ **output_files** *(array[string])* - List of output files produced by the application in addition to
++ **output_files** *(array[string] | array[object])* - List of output files produced by the application in addition to
 the stdout and stderr.
 
 
@@ -259,9 +259,9 @@ Create a new task with the following attributes:
 + **application** *(string)* - Id of the application for the task. The application has to be
 already registered in the server in order to generate the task;
 + **arguments** *(array[string])* - Arguments to provide to the application;
-+ **input_files** *(array[string])* - Name of input files for the application. Files have to be provided
++ **input_files** *(array[string] | array[object])* - Name of input files for the application. Files have to be provided
 in order to make the task scheduled. If omitted the task is immediately ready to start.
-+ **output_files** *(array[string])* - List of output files produced by the application in addition to
++ **output_files** *(array[string] | array[object])* - List of output files produced by the application in addition to
 the stdout and stderr.
 
 
@@ -429,9 +429,9 @@ this attribute will be ignored.
 provided has to coincide.
 + **arguments** *(array[string])* - Arguments to provide to the application.
 + **input_files** *(array[string] | array[object])* - Input file for the application.
-When the task is create a list of filename is provided as input_files. These files
+When the task is created a list of filename is provided as input_files. These files
 have to be uploaded in order to make the task `SCHEDULED`. The task detail provide
-an object for the each input file with the attributes: **name** and **status**.
+an object for each input file with the attributes: **name** and **status**.
 The **status** can be `NEEDED` if the input file has not been provided or `READY`
 otherwise.
 + **output_files** *(array[string] | array[object])* - Output files of the application.
@@ -796,6 +796,17 @@ machines, containers, etc.... When not specified the default value is `JOB`.
 `false` otherwise.
 + **parameters** *(array[object])* - Parameters to set-up for the execution environment. Each parameter
 contains different attributes defined by the context and may vary from application to application.
++ **files** *(array[string] | array[object])* - Files needed by the application to execute.
+This can include binary and/or scripts files as well as data files. The corrisponding
+application or service in the remote infrastructure will execute this files. The list
+can be empty if the referenced application or service is already dployed in the remote
+infrastructure. When the application is created a list of filename is provided as files.
+If the name is not an *URL* the files have to be uploaded in order to make the application
+`enabled`. In case or URL the file will be retrieved before the execution but a copy will be
+mantained in a local cache. The task detail provide
+an object for each input file with the attributes: **name** and **status**.
+The **status** can be `NEEDED` if the input file has not been provided or `READY`
+otherwise.
 
 + Request (application/vnd.indigo-datacloud.apiserver+json)
 
@@ -821,7 +832,8 @@ contains different attributes defined by the context and may vary from applicati
                   "value": "value_2"
                 }
               ],
-              "enabled": true
+              "files": ["app.exe", "app_script.sh"],
+              "enabled": true,
               }
 
 + Response 201 (application/vnd.indigo-datacloud.apiserver+json)
@@ -850,12 +862,26 @@ contains different attributes defined by the context and may vary from applicati
                   "value": "value_2"
                 }
               ],
+              "files": [
+                {
+                  "name": "app.exe",
+                  "status": "NEEDED"
+                },
+                {
+                  "name": "app_script.sh",
+                  "status": "NEEDED"
+                }
+              ],
               "date": "2014-11-11T12:12:00.421Z",
-              "enabled": true,
+              "enabled": false,
               "_links": [
                   {
                       "rel": "self",
                       "href": "/v1.0/applications/456"
+                  },
+                  {
+                      "rel": "input",
+                      "href": "/v1.0/applications/456/input"
                   }
               ]
             }
@@ -902,6 +928,17 @@ machines, containers, etc.... When not specified the default value is `JOB`.
 `false` otherwise.
 + **parameters** *(array[object])* - Parameters to set-up for the execution environment. Each parameter
 contains different attributes defined by the context and may vary from application to application.
++ **files** *(array[string] | array[object])* - Files needed by the application to execute.
+This can include binary and/or scripts files as well as data files. The corrisponding
+application or service in the remote infrastructure will execute this files. The list
+can be empty if the referenced application or service is already dployed in the remote
+infrastructure. When the application is created a list of filename is provided as files.
+If the name is not an *URL* the files have to be uploaded in order to make the application
+`enabled`. In case or URL the file will be retrieved before the execution but a copy will be
+mantained in a local cache. The task detail provide
+an object for each input file with the attributes: **name** and **status**.
+The **status** can be `NEEDED` if the input file has not been provided or `READY`
+otherwise.
 
 + Parameters
     + application_id: 1234 (required, string) - ID of the Application
@@ -941,12 +978,26 @@ Retrieves the details of the specified application.
                     "value": "value_2"
                   }
                 ],
+                "files": [
+                  {
+                    "name": "app.exe",
+                    "status": "READY"
+                  },
+                  {
+                    "name": "app_script.sh",
+                    "status": "READY"
+                  }
+                ],
                 "date": "2014-11-11T12:12:00.421Z",
                 "enabled": true,
                 "_links": [
-                    {
+                  {
                         "rel": "self",
                         "href": "/v1.0/applications/1234"
+                    }
+                    {
+                        "rel": "input",
+                        "href": "/v1.0/applications/1234/input"
                     }
                 ]
             }
