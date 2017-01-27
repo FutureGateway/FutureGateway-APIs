@@ -801,10 +801,10 @@ This can include binary and/or scripts files as well as data files. The corrispo
 application or service in the remote infrastructure will execute this files. The list
 can be empty if the referenced application or service is already dployed in the remote
 infrastructure. When the application is created a list of filename is provided as files.
-If the name is not an *URL* the files have to be uploaded in order to make the application
-`enabled`. In case or URL the file will be retrieved before the execution but a copy will be
-mantained in a local cache. The task detail provide
-an object for each input file with the attributes: **name** and **status**.
+If the name is not an *URL* the files have to be uploaded otherwise the task associated to the application
+will fail. In case of URL the file will be retrieved before the execution but a copy will be
+mantained in a local cache. The application detail provide an object for each file with the
+attributes: **name** and **status**.
 The **status** can be `NEEDED` if the input file has not been provided or `READY`
 otherwise.
 
@@ -933,10 +933,10 @@ This can include binary and/or scripts files as well as data files. The corrispo
 application or service in the remote infrastructure will execute this files. The list
 can be empty if the referenced application or service is already dployed in the remote
 infrastructure. When the application is created a list of filename is provided as files.
-If the name is not an *URL* the files have to be uploaded in order to make the application
-`enabled`. In case or URL the file will be retrieved before the execution but a copy will be
-mantained in a local cache. The task detail provide
-an object for each input file with the attributes: **name** and **status**.
+If the name is not an *URL* the files have to be uploaded otherwise the task associated to the application
+will fail. In case of URL the file will be retrieved before the execution but a copy will be
+mantained in a local cache. The application detail provide an object for each file with the
+attributes: **name** and **status**.
 The **status** can be `NEEDED` if the input file has not been provided or `READY`
 otherwise.
 
