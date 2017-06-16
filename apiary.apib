@@ -1045,7 +1045,11 @@ The creation date cannot be modified by the user.
 
 + Response 200
 
-        Application updated correctly.
+    + Body
+
+            {
+              "message": "Successfully changed application with id: 1234"
+            }
 
 
 + Response 201 (application/vnd.indigo-datacloud.apiserver+json)
@@ -1383,7 +1387,12 @@ The creation date cannot be modified by the user.
 
 + Response 200
 
-        Application updated correctly.
+    + Body
+
+            {
+              "message": "Successfully changed infrastructure with id: 1234"
+            }
+
 
 
 + Response 201 (application/vnd.indigo-datacloud.apiserver+json)
